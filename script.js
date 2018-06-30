@@ -1,29 +1,43 @@
 /*Script.js - functions for mp3 visualizer using p5.js
 Matthew Yu and Ryan Menghani*/
 
-function preload(){
+function preload() {
   soundFormats('ogg', 'mp3');
   sound = loadSound('audio/DEMO_1.mp3');
+  setting = 1;
 }
 
-function setup(){
-  var cnv = createCanvas(window.innerWidth,window.innerHeight);
+function changeSong() {
+  sound.pause();
+  if(setting == 1) {
+    sound = loadSound('audio/DEMO_2.mp3');
+    setting = 2;
+  }
+  else {
+    sound = loadSound('audio/DEMO_1.mp3');
+    setting = 1;
+  }
+
+}
+
+function setup() {
+  var cnv = createCanvas(window.innerWidth,window.innerHeight * .8);
   cnv.parent('myContainer');
   cnv.mouseClicked(togglePlay);
   fft = new p5.FFT(.95, 1024);
   sound.amp(0.8);
 }
 
-function draw(){
+function draw() {
   background(0);
 
   var spectrum = fft.analyze();
   noStroke();
   fill(0,255,0); // spectrum is green
-  for (var i = 0; i< spectrum.length; i++){
+  for (var i = 0; i< spectrum.length; i++) {
     var x = map(i, 0, spectrum.length, 0, width);
     var h = -height + map(spectrum[i], 0, 255, height, 0);
-    rect(x, height, width / spectrum.length, h )
+    rect(x, height, width / spectrum.length, h );
   }
 
   var waveform = fft.waveform();
