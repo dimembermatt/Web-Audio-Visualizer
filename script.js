@@ -7,11 +7,11 @@ function preload(){
 }
 
 function setup(){
-  var cnv = createCanvas(800,400);
+  var cnv = createCanvas(window.innerWidth,window.innerHeight);
   cnv.parent('myContainer');
   cnv.mouseClicked(togglePlay);
-  fft = new p5.FFT();
-  sound.amp(0.2);
+  fft = new p5.FFT(.95, 1024);
+  sound.amp(0.8);
 }
 
 function draw(){
@@ -30,7 +30,7 @@ function draw(){
   noFill();
   beginShape();
   stroke(255,0,0); // waveform is red
-  strokeWeight(3);
+  strokeWeight(1.5);
   for (var i = 0; i< waveform.length; i++){
     var x = map(i, 0, waveform.length, 0, width);
     var y = map( waveform[i], -1, 1, 0, height);
