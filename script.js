@@ -54,25 +54,26 @@ function togglePlay() {
   if (soundFile.isPlaying()) {
     soundFile.pause();
   } else {
-    soundFile.loop();
+    soundFile.play();
   }
 }
 //return callback if something is dropped onto canvas
 function makeCanvasDroppable(canvas, callback) {
   var e = getElement(canvas.elt.id);
   e.drop(callback);
-  document.getElementById("song_title").innerHTML = "local File";
 }
 //set soundFile
 function gotFile(file) {
-  soundFile.pause();
   soundFile.dispose();
-  soundFile = loadSound(file);
-  soundFile.play();
+  document.getElementById("song_title").innerHTML = "loading...";
+  title = "local file";
+  setTimeout(function(){
+    soundFile = loadSound(file);
+  }, 5000);
+  document.getElementById("song_title").innerHTML = title;
 }
 
 function changeSong() {
-  soundFile.pause();
   soundFile.dispose();
   soundFile = loadSound('audio/DEMO_1.mp3');
   title = "DEMO_1 - Scars by Papa Roach";
