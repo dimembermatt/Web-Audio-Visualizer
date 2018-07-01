@@ -1,11 +1,11 @@
 /*Script.js - functions for mp3 visualizer using p5.js
 Matthew Yu and Ryan Menghani*/
+var soundFile;
 
+//load DEMO song and title
 function preload() {
   soundFormats('ogg', 'mp3');
-  sound = loadSound('audio/DEMO_1.mp3');
-  setting = 1;
-
+  soundFile = loadSound('audio/DEMO_1.mp3');
   title = "DEMO_1 - Scars by Papa Roach";
   document.getElementById("song_title").innerHTML = title;
 }
@@ -14,15 +14,15 @@ function setup() {
   var cnv = createCanvas(window.innerWidth * .9, window.innerHeight * .75);
   cnv.parent('myContainer');
   cnv.mouseClicked(togglePlay);
+  noStroke();
+  makeCanvasDroppable(cnv, gotFile);
   fft = new p5.FFT(.95, 64);
-  sound.amp(0.8);
 }
 
 function draw() {
   background(0);
 
   var spectrum = fft.analyze();
-  noStroke();
   fill(0,255,0); // spectrum is green
   for (var i = 0; i< spectrum.length; i++) {
     var x = map(i, 0, spectrum.length, 0, width);
@@ -49,29 +49,60 @@ function draw() {
   text('click to play/pause', 4, 10);
 }
 
-// fade sound if mouse is over canvas
+//pause or play when clicking on canvas
 function togglePlay() {
-  if (sound.isPlaying()) {
-    sound.pause();
+  if (soundFile.isPlaying()) {
+    soundFile.pause();
   } else {
-    sound.loop();
+    soundFile.loop();
   }
+}
+//return callback if something is dropped onto canvas
+function makeCanvasDroppable(canvas, callback) {
+  var e = getElement(canvas.elt.id);
+  e.drop(callback);
+  document.getElementById("song_title").innerHTML = "local File";
+}
+//set soundFile
+function gotFile(file) {
+  soundFile.pause();
+  soundFile.dispose();
+  soundFile = loadSound(file);
+  soundFile.play();
 }
 
 function changeSong() {
-  sound.pause();
-  if(setting == 1) {
-    sound = loadSound('audio/DEMO_2.mp3');
-    setting = 2;
+  soundFile.pause();
+  soundFile.dispose();
+  soundFile = loadSound('audio/DEMO_1.mp3');
+  title = "DEMO_1 - Scars by Papa Roach";
+  document.getElementById("song_title").innerHTML = title;
+}
 
-    title = "DEMO_2 - Gravity by Against The Current";
-    document.getElementById("song_title").innerHTML = title;
+/**
+ * Searches the page for an element with given ID and returns it as
+ * a p5.Element. The DOM node itself can be accessed with .elt.
+ * Returns null if none found.
+ *
+ * @method getElement
+ * @param  {String} id id of element to search for
+ * @return {Object/p5.Element|Null} p5.Element containing node found
+ */
+p5.prototype.getElement = function (e) {
+  var res = document.getElementById(e);
+  if (res) {
+    return wrapElement(res);
+  } else {
+    return null;
   }
-  else {
-    sound = loadSound('audio/DEMO_1.mp3');
-    setting = 1;
-
-    title = "DEMO_1 - Scars by Papa Roach";
-    document.getElementById("song_title").innerHTML = title;
+};
+/**
+ * Helper function for getElement and getElements.
+ */
+function wrapElement(elt) {
+  if (elt.tagName === "VIDEO" || elt.tagName === "AUDIO") {
+    return new p5.MediaElement(elt);
+  } else {
+    return new p5.Element(elt);
   }
 }
