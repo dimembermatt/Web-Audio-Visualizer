@@ -113,8 +113,6 @@ function getX(event) {
 
 function raindropsAnimationTick(drop) {
     document.onmousemove = function(event) {getX(event)};
-    console.log('MouseX: ' + mouseX*waveToScreenRatio)
-    console.log('Range: ' + Math.floor(Math.random() * drop.options.waveLength));
     if ((Math.random() * 100) < drop.options.frequency) {
         drop.springs[Math.floor(mouseX * waveToScreenRatio)].p = drop.options.waveHeight;
     }
