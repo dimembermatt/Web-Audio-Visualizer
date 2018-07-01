@@ -1,9 +1,4 @@
 $(function(){
-    var mobile = (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-
-    if (!mobile){
-        jQuery('#example3').raindrops(
-            {color:'#ddb3c2', waveLength: 700,waveHeight: 50}
-        );
-    }
+    jQuery('#header').raindrops({color:'#7eacf7', canvasHeight: 100});
+    jQuery('#blueSection').raindrops({color:'#b7637f'});
 });

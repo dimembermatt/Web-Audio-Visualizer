@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans');
+@import url('https://fonts.googleapis.com/css?family=Nothing+You+Could+Do');
+@import url('https://fonts.googleapis.com/css?family=Roboto+Mono');
+html {font-size: calc(8px + 1.0vw);}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 400;
+  line-height: 1.45;
+  color: #333
+}
+
+p {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-bottom: 1.3em;
+}
+
+h2 {
+  font-family: 'Roboto Mono', monospace;
+  margin: 1em 0 1em;
+  font-weight: inherit;
+  line-height: 1.2;
+}
+
+h1 {
+  font-family: 'Open Sans', sans-serif;
+  margin-top: .1em;
+  margin-bottom: .1em;
+  font-size: 3.157em;
+}
+
+.centered {
+  text-align: center;
+}
+
+#colorSection {
+  overflow: hidden;
+  position: relative;
+}
+
+#header {
+  padding-bottom: 100px;
+}
+
+#blueSection {
+  padding-top: 3em;
+  padding-bottom: 2em;
+  background: #7eacf7;
+}
+
+#redSection {
+  background: #b7637f;
+}
