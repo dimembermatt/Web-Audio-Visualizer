@@ -18,11 +18,17 @@ function setup() {
   noStroke();
   makeCanvasDroppable(cnv, gotFile);
   fft = new p5.FFT(.95, 64);
+  amplitude = new p5.Amplitude();
 }
 
 //mainLoop
 function draw() {
   background(0);
+
+  var level = amplitude.getLevel();
+  //document.getElementById("song_title").innerHTML = level;
+  var size = map(level, 0, .5, 0, 400);
+  ellipse(width/2, height/2, size, size);
 
   var spectrum = fft.analyze();
   fill(0,255,0); // spectrum is green
@@ -48,8 +54,25 @@ function draw() {
   }
   endShape();
 
+  var bassFreq = fft.getEnergy("bass");
+  noFill();
+  beginShape();
+  stroke(0,0,255);
+  strokeWeight(2);
+  for (var i = 0; i< bassFreq.length; i++) {
+    var x = map(i, 0, bassFreq.length, 0, width);
+    var y = map(bassFreq[i], 0, 255, 0, height);
+    vertex(x,y);
+  }
+  endShape();
   text('click to play/pause', 4, 10);
 }
+
+
+
+
+
+
 
 //pause or play when clicking on canvas
 function togglePlay() {
