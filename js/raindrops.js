@@ -12,7 +12,7 @@ $.widget("water.raindrops", {
         waveHeight: 100 ,   // Wave height. Higher number means higher waves created by raindrops.
         density: 0.02,      // Water density. Higher number means shorter ripples.
         rippleSpeed:  0.1,  // Speed of the ripple effect. Higher number means faster ripples.
-        rightPadding: 20,   // To cover unwanted gaps created by the animation.
+        rightPadding: 20,    // To cover unwanted gaps created by the animation.
         position:'absolute',
         positionBottom:0,
         positionLeft:0
@@ -39,7 +39,8 @@ $.widget("water.raindrops", {
         canvas.style.left = this.options.positionLeft;
         
         this.springs = [];
-        for (var i = 0; i < this.options.waveLength; i++) {
+        for (var i = 0; i < this.options.waveLength; i++)
+        {
             this.springs[i] = new this.Spring();
         }
 
@@ -50,7 +51,8 @@ $.widget("water.raindrops", {
         this.p = 0;
         this.v = 0;
         //this.update = function (damp, tens)
-        this.update = function (density, rippleSpeed) {
+        this.update = function (density, rippleSpeed)
+        {
             //this.v += (-tens * this.p - damp * this.v);
             this.v += (-rippleSpeed * this.p - density * this.v);
             this.p += this.v;
@@ -68,12 +70,16 @@ $.widget("water.raindrops", {
                 rightDeltas = [];
 
         for (var t = 0; t < 8; t++) {
-            for (i = 0; i < this.options.waveLength; i++) {
-                if (i > 0) {
+
+            for (i = 0; i < this.options.waveLength; i++)
+            {
+                if (i > 0)
+                {
                     leftDeltas[i] = spread * (this.springs[i].p - this.springs[i - 1].p);
                     this.springs[i - 1].v += leftDeltas[i];
                 }
-                if (i < this.options.waveLength - 1) {
+                if (i < this.options.waveLength - 1)
+                {
                     rightDeltas[i] = spread * (this.springs[i].p - this.springs[i + 1].p);
                     this.springs[i + 1].v += rightDeltas[i];
                 }
@@ -105,17 +111,9 @@ $.widget("water.raindrops", {
     
 });
 
-var mouseX = 0;
-var waveToScreenRatio = 340 / screen.width;
-function getX(event) {
-    mouseX = event.clientX;
-} 
-
 function raindropsAnimationTick(drop) {
-    document.onmousemove = function(event) {getX(event)};
-    if ((Math.random() * 100) < drop.options.frequency) {
-        drop.springs[Math.floor(mouseX * waveToScreenRatio)].p = drop.options.waveHeight;
-    }
+    if ((Math.random() * 100) < drop.options.frequency)
+        drop.springs[Math.floor(Math.random() * drop.options.waveLength)].p = drop.options.waveHeight;
 
     drop.ctx.clearRect(0, 0, drop.options.realWidth, drop.options.canvasHeight);
     drop.updateSprings(0.1);
@@ -124,4 +122,5 @@ function raindropsAnimationTick(drop) {
     requestAnimationFrame(function () {
         raindropsAnimationTick(drop);
     });
-};
+}
+;
