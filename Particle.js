@@ -36,11 +36,11 @@ class Particle {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.vx = random(-1, 1);
-    this.vy = random(-1, 1);
+    this.vx = random(-.1, .1);
+    this.vy = random(-.1, .1);
     this.alpha = 255;
-    this.vAlpha = random(-5, 2);
-    //this.color = random(0, 255);
+    this.vAlpha = random(-1.3, 1);
+    this.color = [random(0, 255), random(0, 255), random(0, 255)];
   }
 
   update() {
@@ -57,7 +57,9 @@ class Particle {
 
   show() {
     noStroke();
-    fill(255, this.alpha);
+    //fill(255, this.alpha);
+    fill(this.color[0], this.color[1], this.color[2]);
+    //fill(this.alpha, this.x, this.y);
     ellipse(this.x, this.y, 3);
   }
 
