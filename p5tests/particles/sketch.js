@@ -1,6 +1,6 @@
 //test sandbox for QuadTree
 'use strict';
-var modifier = 2.5 / 5;
+var modifier = 2 / 5;
 var cols =  100 * modifier;
 var rows =  50 * modifier;
 var particles = [];
@@ -28,7 +28,7 @@ function draw() {
   qtree.show();
   //for each particle, identify other nearby particles and display intersecting particles.
   for (let particle of particles) {
-    let range = new Rectangle(particle.x, particle.y, 1, 1);
+    let range = new Rectangle(particle.x, particle.y, 10, 10);
     let others = qtree.query(range);
     for (let other of others) {
       if (particle !== other && range.intersects(other)) {
