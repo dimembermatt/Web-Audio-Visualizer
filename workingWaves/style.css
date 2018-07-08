@@ -1,0 +1,16 @@
+#header {
+    width: 100%;
+    text-align: center;
+    font-size: 25px;
+    background-color: #89b4f9;
+    overflow: auto;
+}
+
+#header h2 {
+    width: 30%;
+    float: left;
+    border: solid black 3px;
+    letter-spacing: 20px ;
+    margin: 1.5%;
+    background-color: aliceblue;
+}
