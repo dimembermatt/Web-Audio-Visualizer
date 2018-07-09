@@ -1,6 +1,6 @@
 //test sandbox for QuadTree
 'use strict';
-var modifier = 3 / 5;
+var modifier = 5 / 5;
 var cols =  100 * modifier;
 var rows =  50 * modifier;
 var particles = [];
@@ -18,7 +18,7 @@ function setup() {
   let ctr = 0;
   for (let i = 0; i < cols; i++) {
     for (let j = 0; j < rows; j++) {
-      particles[ctr] = new Particle(i * widthSlice + widthSlice * .5, j * heightSlice + heightSlice * .5,25, 5);
+      particles[ctr] = new Particle(i * widthSlice + widthSlice * .5, j * heightSlice + heightSlice * .5,15, 5);
       ctr++;
     }
   }
