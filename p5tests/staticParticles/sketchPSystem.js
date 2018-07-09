@@ -1,6 +1,6 @@
 //test sandbox for QuadTree
 'use strict';
-var modifier = 5 / 5;
+var modifier = 7 / 5;
 var cols =  100 * modifier;
 var rows =  50 * modifier;
 var widthSlice;
@@ -8,12 +8,13 @@ var heightSlice;
 var pSystem;
 
 function setup() {
+  
   createCanvas(windowWidth, windowHeight);
   widthSlice = windowWidth/cols;
   heightSlice = windowHeight/rows;
-  pSystem = new ParticleSystem(rows, cols, 5);
+  pSystem = new ParticleSystem(rows, cols, 5, 0.995);
 
-  pSystem.modifyParticleSize(20, 20, 1000);
+  pSystem.modifyParticleSize(20, 20, 500);
 }
 
 function draw() {
@@ -23,7 +24,11 @@ function draw() {
 }
 
 function mousePressed() {
-  let y = Math.round(map(mouseX, 0, width, 0, cols));
   let x = Math.round(map(mouseY, 0, height, 0, rows));
-  pSystem.modifyParticleSize(x, y, 1000);
+  let y = Math.round(map(mouseX, 0, width, 0, cols));
+  for (let i = -1; i <= 1; i++) {
+    for (let j = -1; j <= 1; j++) {
+        pSystem.modifyParticleSize(x+1, y+j, 100);
+    }
+  }
 }

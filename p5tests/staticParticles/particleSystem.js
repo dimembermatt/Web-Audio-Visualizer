@@ -27,9 +27,11 @@ class Particle {
  */
 
 class ParticleSystem {
-  constructor(rows, columns, basePSize) {
-    this.columns = columns;
+  constructor(rows, columns, basePSize, decayRate) {
     this.rows = rows;
+    this.columns = columns
+    this.decayRate = decayRate;
+    this.basePSize = basePSize;
     this.pSystem = create2dArray(rows, columns);
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < columns; j++) {
@@ -80,7 +82,7 @@ class ParticleSystem {
 
         sum += this.pSystem[i][j].size;
         let weightedAvg = sum/count;
-        this.pSystem[i][j].size = this.pSystem[i][j].size < 3 ? weightedAvg : weightedAvg * .99;
+        this.pSystem[i][j].size = this.pSystem[i][j].size <= this.basePSize ? this.basePSize : weightedAvg;
       }
     }
   }
