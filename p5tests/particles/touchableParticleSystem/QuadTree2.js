@@ -42,6 +42,24 @@ class Circle {
     this.r = r;
     this.rSquared = this.r * this.r;
   }
+
+  //return 0 - topright, 1 - topleft, 2 - bottomright, 3 - bottomleft
+  detPosition(particle) {
+    let x = this.x - particle.x;
+    let y = this.y - particle.y;
+    if (x >= 0) {
+      if (y >= 0)
+        return 2;
+      else
+        return 0;
+    }
+    else {
+      if (y >= 0)
+        return 3;
+      else
+        return 1;
+    }
+  }
 }
 
 //this class sorts objects

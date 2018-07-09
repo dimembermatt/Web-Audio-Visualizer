@@ -2,8 +2,8 @@ class Particle {
   constructor(x, y, size, speedMod) {
     this.x = x;
     this.y = y;
-    this.vx = random(-.1, .1) * speedMod;
-    this.vy = random(-.1, .1) * speedMod;
+    this.vx = 0;//random(-.1, .1) * speedMod;
+    this.vy = 0;//random(-.1, .1) * speedMod;
     this.old_vx = 0;
     this.old_vy = 0;
     this.colliding = false;
