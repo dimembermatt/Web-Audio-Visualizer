@@ -11,7 +11,7 @@ function setup() {
   createCanvas(window.innerWidth, window.innerHeight);
   widthSlice = window.innerWidth/cols;
   heightSlice = window.innerHeight/rows;
-  pSystem = new ParticleSystem(cols, rows, 5, .995);
+  pSystem = new ParticleSystem(cols, rows, 3, .999);
 
   pSystem.modifyParticleSize(20, 20, 500);
 }
@@ -20,6 +20,9 @@ function draw() {
   background(0);
   pSystem.display(widthSlice, heightSlice);
   pSystem.update();
+  if(mouseIsPressed) {
+    mousePressed();
+  }
 }
 
 function mousePressed() {

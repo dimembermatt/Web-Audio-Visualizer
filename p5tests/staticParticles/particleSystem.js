@@ -87,7 +87,7 @@ class ParticleSystem {
         sum += this.pSystem[i][j].size;
         count ++;
         let weightedAvg = sum/count;
-        this.pSystem[i][j].size = weightedAvg;// * this.decayRate;
+        this.pSystem[i][j].size = weightedAvg * this.decayRate;
         if (this.pSystem[i][j].size <= this.basePSize) {
           this.pSystem[i][j].size = this.basePSize;
         }
