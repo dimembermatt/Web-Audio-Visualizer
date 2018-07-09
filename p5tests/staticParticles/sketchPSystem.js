@@ -8,10 +8,11 @@ var heightSlice;
 var pSystem;
 
 function setup() {
-  createCanvas(window.innerWidth, window.innerHeight);
-  widthSlice = window.innerWidth/cols;
-  heightSlice = window.innerHeight/rows;
-  pSystem = new ParticleSystem(cols, rows, 5, .995);
+  
+  createCanvas(windowWidth, windowHeight);
+  widthSlice = windowWidth/cols;
+  heightSlice = windowHeight/rows;
+  pSystem = new ParticleSystem(rows, cols, 5, 0.995);
 
   pSystem.modifyParticleSize(20, 20, 500);
 }
@@ -23,12 +24,11 @@ function draw() {
 }
 
 function mousePressed() {
-  let x = Math.round(map(mouseX, 0, width, 0, cols));
-  let y = Math.round(map(mouseY, 0, height, 0, rows));
+  let x = Math.round(map(mouseY, 0, height, 0, rows));
+  let y = Math.round(map(mouseX, 0, width, 0, cols));
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
-        pSystem.modifyParticleSize(y + i, x + j, 100);
+        pSystem.modifyParticleSize(x+1, y+j, 100);
     }
   }
-
 }
