@@ -28,7 +28,7 @@ function mousePressed() {
   let y = Math.round(map(mouseX, 0, width, 0, cols));
   for (let i = -1; i <= 1; i++) {
     for (let j = -1; j <= 1; j++) {
-        pSystem.modifyParticleSize(x+1, y+j, 100);
+        pSystem.modifyParticleSize(x+i, y+j, 100);
     }
   }
 }
