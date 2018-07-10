@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+          <title></title>
+    </head>
+
+    <body>
+
+    <script>
+    var context = new (window.AudioContext || window.webkitAudioContext);
+    var oscillator = context.createOscillator(); 
+    var gainNode = context.createGain(); 
+    oscillator.connect(gainNode);
+    gainNode.connect(context.destination);
+    oscillator.type = 'sawtooth';
+    oscillator.frequency.value = 440;
+    oscillator.start(0);
+    gainNode.gain.setValueAtTime(0, context.currentTime + 2);
+    gainNode.gain.setValueAtTime(10, context.currentTime + 4);
+    gainNode.gain.setValueAtTime(0, context.currentTime + 10);
+    oscillator.stop(context.currentTime + 10);
+    
+    </script>
+
+    </body>
+
+</html>
