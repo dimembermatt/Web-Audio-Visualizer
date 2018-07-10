@@ -11,7 +11,7 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   widthSlice = windowWidth/cols;
   heightSlice = windowHeight/rows;
-  pSystem = new ParticleSystem(rows, cols, 2.5, .9999);
+  pSystem = new ParticleSystem(rows, cols, 2.5, 1);
 
   //pSystem.modifyParticleSize(20, 20, 500);
 }
@@ -26,11 +26,16 @@ function draw() {
 }
 
 function mousePressed() {
-  let x = Math.round(map(mouseY, 0, height, 0, rows));
-  let y = Math.round(map(mouseX, 0, width, 0, cols));
-  for (let i = -1; i <= 1; i++) {
-    for (let j = -1; j <= 1; j++) {
-        pSystem.modifyParticle(x+i, y+j, 50);
+  if (mouseY >= 0 && mouseY < height && mouseX >= 0 && mouseX < width) {
+    //bounding correction to prevent crash if mouse is at edge of screen
+    let x = Math.round(map(mouseY, 0, height, 1, rows-2));
+    let y = Math.round(map(mouseX, 0, width, 1, cols-2));
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
+          console.log("X:", x, " i:", i);
+          console.log("Y:", y, " j:", j);
+          pSystem.modifyParticle(x+i, y+j, 50);
+      }
     }
   }
 }

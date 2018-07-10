@@ -117,7 +117,6 @@ class ParticleSystem {
             sum += this.pSystem[i + 1][j - 1].size; //top right
             count += 3;
           } else {//leftmost column
-            console.log(j);
             sum += this.pSystem[i][j + 1].size;     //down
             sum += this.pSystem[i][j - 1].size;     //up
             sum += this.pSystem[i + 1][j].size;     //right
@@ -164,6 +163,8 @@ class ParticleSystem {
    *    in the form of a 3 length array holding rgb values.
    */
   modifyParticle(i, j, newSize, newColor = null) {
+    //console.log("i:", i);
+    //console.log("j:", j);
     let particle = this.pSystem[i][j];
     particle.size = newSize;
     if (newColor !== null) {
