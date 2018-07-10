@@ -7,6 +7,7 @@ function getFile() {
         src = context.createBufferSource()
         // Load a file from the file input
         let selectedFile = document.getElementById('fileIn').files[0];
+        let reader = new FileReader();
         // Create an HTTP request to get the file
         let request = new XMLHttpRequest();
         // Error - File not found!
@@ -14,12 +15,9 @@ function getFile() {
             alert("Select a file!")
         }
         else {
-            request.open('GET', selectedFile.name, true);
-            request.responseType = 'arraybuffer';
-
-            request.onload = function() {
-                let data = request.response;
-                context.decodeAudioData(data, function(buffer){
+            reader.onload = function() {
+                let data = reader.result;
+                    context.decodeAudioData(data, function(buffer){
                     src.buffer = buffer;
                     src.loop = false;
                     src.connect(context.destination);
@@ -29,7 +27,7 @@ function getFile() {
                     }
                 }, (e) => console.log("Error with decoding audio data" + e));
             }
-            request.send();
+            reader.readAsArrayBuffer(selectedFile);
         }
         return !!selectedFile;
 }
