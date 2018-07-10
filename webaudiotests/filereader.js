@@ -1,11 +1,13 @@
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let play = document.getElementById('play');
 let stop = document.getElementById('stop');
-let src = context.createBufferSource();
+let src;
 
 function getFile() {
+        src = context.createBufferSource()
         // Load a file from the file input
         let selectedFile = document.getElementById('fileIn').files[0];
+        let reader = new FileReader();
         // Create an HTTP request to get the file
         let request = new XMLHttpRequest();
         // Error - File not found!
@@ -13,18 +15,19 @@ function getFile() {
             alert("Select a file!")
         }
         else {
-            request.open('GET', selectedFile.name, true);
-            request.responseType = 'arraybuffer';
-
-            request.onload = function() {
-                let data = request.response;
-                context.decodeAudioData(data, function(buffer){
+            reader.onload = function() {
+                let data = reader.result;
+                    context.decodeAudioData(data, function(buffer){
                     src.buffer = buffer;
-                    src.connect(context.destination);
                     src.loop = false;
+                    src.connect(context.destination);
+                    src.start(0);
+                    src.onended = function() {
+                        play.removeAttribute('disabled');
+                    }
                 }, (e) => console.log("Error with decoding audio data" + e));
             }
-            request.send();
+            reader.readAsArrayBuffer(selectedFile);
         }
         return !!selectedFile;
 }
@@ -34,13 +37,10 @@ play.onclick = function() {
     
     // Only disable the play button if a file is found
     if (fileFound){
-        src.start(0);
         play.setAttribute('disabled', 'disabled');
     }
 }
-src.onended = function() {
-    play.removeAttribute('disabled');
-}
+
 
 stop.onclick = function() {
     src.stop(0);
