@@ -6,6 +6,7 @@ var rows =  50 * modifier;
 var widthSlice;
 var heightSlice;
 var pSystem;
+var counter;
 
 function setup() {
   createCanvas(windowWidth, windowHeight);
@@ -13,6 +14,7 @@ function setup() {
   heightSlice = windowHeight/rows;
   pSystem = new ParticleSystem(rows, cols, 2.5, .99);
   //pSystem.modifyParticleSize(20, 20, 500);
+  counter = 0;
 }
 
 function draw() {
@@ -22,13 +24,23 @@ function draw() {
   if(mouseIsPressed) {
     mousePressed();
   }
+
+  if (counter == 9) {
+    mousePressed();
+    //square
+    mousePressed(mouseX + 150, mouseY + 150);
+    mousePressed(mouseX - 150, mouseY + 150);
+    mousePressed(mouseX + 150, mouseY - 150);
+    mousePressed(mouseX - 150, mouseY - 150);
+  }
+  counter = (counter + 1)% 10;
 }
 
-function mousePressed() {
-  if (mouseY >= 0 && mouseY < height && mouseX >= 0 && mouseX < width) {
+function mousePressed(xCoord = mouseX, yCoord = mouseY) {
+  if (yCoord >= 0 && yCoord < height && xCoord >= 0 && xCoord < width) {
     //bounding correction to prevent crash if mouse is at edge of screen
-    let x = Math.round(map(mouseY, 0, height, 1, rows-2));
-    let y = Math.round(map(mouseX, 0, width, 1, cols-2));
+    let x = Math.round(map(yCoord, 0, height, 1, rows-2));
+    let y = Math.round(map(xCoord, 0, width, 1, cols-2));
     for (let i = -1; i <= 1; i++) {
       for (let j = -1; j <= 1; j++) {
         pSystem.modifyParticle(x+i, y+j, 50);
