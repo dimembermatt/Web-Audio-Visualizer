@@ -13,15 +13,8 @@ let heightSlice;  //modifiable on windowResize
 let pSystem;      //particle system
 
 //boolean vars
-
 let repeated = 0;
-
-class Point {
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-}
+let count = 0;
 
 function setup() {
   let cnv = createCanvas(windowWidth * .9998, windowHeight * .977);
@@ -32,7 +25,7 @@ function setup() {
   pSystem = new ParticleSystem(rows, cols, 2.5, .98);
 }
 
-let count = 0;
+
 function draw() {
   background(0);
   if(loaded || waves || spectrum) {
@@ -82,9 +75,9 @@ function draw() {
 
     let avg = sum/i;
     console.log(avg);
-    if (Math.abs(avg) > 184)
+    if (Math.abs(avg) > 170)
       console.log("tap!");
-    if (Math.abs(avg) > 184 && repeated === 0) {
+    if (Math.abs(avg) > 170 && repeated === 0) {
       if(waves !== null) {
         let peak = 0;
         for (let i = 0; i < waves.length; i++) {
@@ -143,29 +136,65 @@ function drawSquare2(peak) {
 
 function drawTriangle1(peak) {
   mousePressed(mouseX, mouseY + 210, peak*200);
-  mousePressed(mouseX - 130, mouseY - 130, peak*200);
-  mousePressed(mouseX + 130, mouseY - 130, peak*200);
+  mousePressed(mouseX - 150, mouseY - 130, peak*200);
+  mousePressed(mouseX + 150, mouseY - 130, peak*200);
 }
 
 function drawTriangle2(peak) {
   mousePressed(mouseX, mouseY - 210, peak*200);
-  mousePressed(mouseX - 130, mouseY + 130, peak*200);
-  mousePressed(mouseX + 130, mouseY + 130, peak*200);
+  mousePressed(mouseX - 150, mouseY + 130, peak*200);
+  mousePressed(mouseX + 150, mouseY + 130, peak*200);
 }
 
-// function drawCircle(peak) {
-//   for (let i = -4; i < 4; i + 2) {
-//     let y = Math.sin(Math.PI/i);
-//     let x = Math.cos(Math.PI/i);
-//     mousePressed(mouseX + x*20, mouseY + y*20, peak*100);
-//   }
-// }
+function drawCircle(peak) {
+  mousePressed(mouseX, mouseY - 315, peak*200);
+  mousePressed(mouseX - 225, mouseY + 195, peak*200);
+  mousePressed(mouseX + 225, mouseY + 195, peak*200);
+  mousePressed(mouseX, mouseY + 315, peak*200);
+  mousePressed(mouseX - 225, mouseY - 195, peak*200);
+  mousePressed(mouseX + 225, mouseY - 195, peak*200);
+  mousePressed(mouseX - 275, mouseY, peak*200);
+  mousePressed(mouseX + 275, mouseY, peak*200);
+
+}
+
+function drawHorizontalLine(peak) {
+  mousePressed(mouseX - 300, mouseY, peak*200);
+  mousePressed(mouseX - 150, mouseY, peak*200);
+  mousePressed(mouseX, mouseY, peak*200);
+  mousePressed(mouseX + 150, mouseY, peak*200);
+  mousePressed(mouseX + 300, mouseY, peak*200);
+}
+
+function drawVerticalLine(peak) {
+  mousePressed(mouseX, mouseY - 300, peak*200);
+  mousePressed(mouseX, mouseY - 150, peak*200);
+  mousePressed(mouseX, mouseY, peak*200);
+  mousePressed(mouseX, mouseY + 150, peak*200);
+  mousePressed(mouseX, mouseY + 300, peak*200);
+}
+
+function drawDiagonalLine1(peak) {
+  mousePressed(mouseX - 300, mouseY - 300, peak*200);
+  mousePressed(mouseX - 150, mouseY - 150, peak*200);
+  mousePressed(mouseX, mouseY, peak*200);
+  mousePressed(mouseX + 150, mouseY + 150, peak*200);
+  mousePressed(mouseX + 300, mouseY + 300, peak*200);
+}
+
+function drawDiagonalLine2(peak) {
+  mousePressed(mouseX + 300, mouseY - 300, peak*200);
+  mousePressed(mouseX + 150, mouseY - 150, peak*200);
+  mousePressed(mouseX, mouseY, peak*200);
+  mousePressed(mouseX - 150, mouseY + 150, peak*200);
+  mousePressed(mouseX - 300, mouseY + 300, peak*200);
+}
 
 function displayVisual(peak) {
   if (peak > .1) {
     //mousePressed(mouseX, mouseY, peak*200);
     //square
-    let visual = Math.round(random(0, 3));
+    let visual = Math.round(random(0, 8));
     if (visual === 0) {
       drawSquare(peak);
     } else if (visual === 1) {
@@ -174,6 +203,16 @@ function displayVisual(peak) {
       drawTriangle1(peak);
     } else if (visual === 3) {
       drawTriangle2(peak);
+    } else if (visual === 4) {
+      drawCircle(peak);
+    } else if (visual === 5) {
+      drawHorizontalLine(peak);
+    } else if (visual === 6) {
+      drawVerticalLine(peak);
+    } else if (visual === 7) {
+      drawDiagonalLine1(peak);
+    } else if (visual === 8) {
+      drawDiagonalLine2(peak);
     } else;
   }
 }

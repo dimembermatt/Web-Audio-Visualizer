@@ -12,6 +12,13 @@ function create2dArray(columns, rows) {
   return arr;
 }
 
+class Point {
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
+	}
+}
+
 class Particle {
   /**
    * class function constructor creates a particle
