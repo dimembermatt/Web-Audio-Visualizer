@@ -1,119 +1,111 @@
 //test sandbox for StaticParticleSystem
 'use strict';
+//constants
 const modifier = 4.5 / 5;
 const cols =  100 * modifier;
 const rows =  50 * modifier;
-let widthSlice;
-let heightSlice;
-let pSystem;
-let beatFound = false;
-let repeated = false;
-
-let context = new (window.AudioContext || window.webkitAudioContext)();
-const mastergain = context.createGain();
-const analyser = context.createAnalyser();
-const analyser2 = context.createAnalyser();
-const filter = context.createBiquadFilter();
-let src = context.createBufferSource();
-// Connect audio nodes form src to dest
-src.connect(mastergain);
-mastergain.connect(analyser);
-mastergain.connect(filter);
-filter.connect(analyser2);
-analyser.connect(context.destination);
-
-//filter.type = "lowpass";
-filter.frequency.value = 225;
-filter.gain.value = 10;
-// Get the audio src
-/*
-Might take a while to load audio
-*/
-let request = new XMLHttpRequest();
-request.open('GET', 'DEMO_1.mp3', true);
-request.responseType = 'arraybuffer';
-
-request.onload = function() {
-    let data = request.response;
-    context.decodeAudioData(data, function(buffer){
-        src.buffer = buffer;
-        src.loop = false;
-    }, (e) => console.log("Error with decoding audio data" + e));
-}
-request.send();
-src.start(0);
 // Add the audio time domain data
 const waves = new Float32Array(analyser.frequencyBinCount);
-const waves2 = new Float32Array(analyser2.frequencyBinCount);
-analyser.getFloatTimeDomainData(waves);
-analyser2.getFloatTimeDomainData(waves2);
+const spectrum = new Uint8Array(analyser2.frequencyBinCount);
+//file scope var
+let widthSlice;   //modifiable on windowResize
+let heightSlice;  //modifiable on windowResize
+let pSystem;      //particle system
 
-function updateWaves() {
-    analyser.getFloatTimeDomainData(waves);
-    analyser2.getFloatTimeDomainData(waves2);
+//boolean vars
+
+let repeated = 0;
+
+class Point {
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
+	}
 }
 
 function setup() {
-  let cnv = createCanvas(windowWidth, windowHeight);
+  let cnv = createCanvas(windowWidth * .9998, windowHeight * .977);
   cnv.style('display', 'block');
 
   widthSlice = windowWidth/cols;
   heightSlice = windowHeight/rows;
-  pSystem = new ParticleSystem(rows, cols, 2.5, .99);
-  round = 0;
+  pSystem = new ParticleSystem(rows, cols, 2.5, .98);
 }
 
-
+let count = 0;
 function draw() {
   background(0);
+  if(loaded || waves || spectrum) {
+    analyser.getFloatTimeDomainData(waves);
+    analyser2.getByteFrequencyData(spectrum);
 
-  pSystem.display(widthSlice, heightSlice);
-  pSystem.update();
-  if(mouseIsPressed) {
-    mousePressed();
-  }
-
-  requestAnimationFrame(updateWaves);
-
-  let sum = 0;
-  let count = 0;
-  noFill();
-  beginShape();
-  stroke(255,0,0); // waveform is red
-  strokeWeight(1.5);
-  for (let i = 0; i < waves2.length; i++) {
-    sum += waves2[i];
-    count ++;
-  }
-  if (beatFound == false) {
-    for (let i = 0; i < waves.length; i++) {
-      var x = map(i, 0, waves.length, 0, width);
-      var y = map(waves[i], -1, 1, 0, height);
-      vertex(x,y);
-    }
-  }
-  endShape();
-  let avg = sum/count;
-  if (Math.abs(avg) > .013)
-    console.log("tap!");
-  if (Math.abs(avg) > .015 && repeated == false) {
-    if(waves !== null) {
-      let peak = 0;
+    noFill();
+    beginShape();
+    stroke(random(0, 255), random(0, 255), random(0, 255)); // waveform is red
+    strokeWeight(1.5);
+    if (!beatFound) {
       for (let i = 0; i < waves.length; i++) {
-        if (waves[i] > peak) {
-          peak = waves[i];
-        }
+        var x = map(i, 0, waves.length, 0, width);
+        var y = map(waves[i], -1, 1, 200, height - 200);
+        vertex(x,y);
       }
-      displayVisual(peak);
     }
-    beatFound = true;
-    repeated = true;
-  }
-  else {
-    repeated = false;
-  }
+    endShape();
 
 
+    pSystem.update();
+    if(mouseIsPressed) {
+      mousePressed();
+    }
+
+    strokeWeight(4);
+		stroke(255, 255, 255);
+    let sum = 0;
+		let prevPoint;
+		let i = 0;
+		let xoff = 0;
+		while(i < spectrum.length && xoff <= width) {
+			let freq  = spectrum[i] + 20;
+			point(xoff, freq);
+			if(prevPoint) {
+				line(prevPoint.x, prevPoint.y, xoff, freq);
+			}
+			prevPoint = new Point(xoff, freq);
+			xoff += 10;
+      sum += freq - 20;
+			i++;
+		}
+
+
+    pSystem.display(widthSlice, heightSlice);
+
+
+    let avg = sum/i;
+    console.log(avg);
+    if (Math.abs(avg) > 184)
+      console.log("tap!");
+    if (Math.abs(avg) > 184 && repeated === 0) {
+      if(waves !== null) {
+        let peak = 0;
+        for (let i = 0; i < waves.length; i++) {
+          if (waves[i] > peak) {
+            peak = waves[i];
+          }
+        }
+        displayVisual(peak);
+      }
+      beatFound = true;
+      count = 0;
+      repeated = true;
+    }
+    else {
+      repeated = (repeated + 1) % 6;
+      count ++;
+      if (count > 25)
+        beatFound = false;
+    }
+
+  }
 }
 
 function mousePressed(xCoord = mouseX, yCoord = mouseY, newSize = 50) {
@@ -136,29 +128,29 @@ function windowResized() {
 }
 
 function drawSquare(peak) {
-  mousePressed(mouseX + 200, mouseY + 200, peak*250);
-  mousePressed(mouseX - 200, mouseY + 200, peak*250);
-  mousePressed(mouseX + 200, mouseY - 200, peak*250);
-  mousePressed(mouseX - 200, mouseY - 200, peak*250);
+  mousePressed(mouseX + 200, mouseY + 200, peak*200);
+  mousePressed(mouseX - 200, mouseY + 200, peak*200);
+  mousePressed(mouseX + 200, mouseY - 200, peak*200);
+  mousePressed(mouseX - 200, mouseY - 200, peak*200);
 }
 
 function drawSquare2(peak) {
-  mousePressed(mouseX + 250, mouseY, peak*250);
-  mousePressed(mouseX - 250, mouseY, peak*250);
-  mousePressed(mouseX, mouseY + 250, peak*250);
-  mousePressed(mouseX, mouseY - 250, peak*250);
+  mousePressed(mouseX + 250, mouseY, peak*200);
+  mousePressed(mouseX - 250, mouseY, peak*200);
+  mousePressed(mouseX, mouseY + 250, peak*200);
+  mousePressed(mouseX, mouseY - 250, peak*200);
 }
 
 function drawTriangle1(peak) {
-  mousePressed(mouseX, mouseY + 200, peak*250);
-  mousePressed(mouseX - 130, mouseY - 130, peak*250);
-  mousePressed(mouseX + 130, mouseY - 130, peak*250);
+  mousePressed(mouseX, mouseY + 210, peak*200);
+  mousePressed(mouseX - 130, mouseY - 130, peak*200);
+  mousePressed(mouseX + 130, mouseY - 130, peak*200);
 }
 
 function drawTriangle2(peak) {
-  mousePressed(mouseX, mouseY - 200, peak*250);
-  mousePressed(mouseX - 130, mouseY + 130, peak*250);
-  mousePressed(mouseX + 130, mouseY + 130, peak*250);
+  mousePressed(mouseX, mouseY - 210, peak*200);
+  mousePressed(mouseX - 130, mouseY + 130, peak*200);
+  mousePressed(mouseX + 130, mouseY + 130, peak*200);
 }
 
 // function drawCircle(peak) {
