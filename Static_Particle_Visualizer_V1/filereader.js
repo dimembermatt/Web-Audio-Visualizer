@@ -17,7 +17,7 @@ mastergain.connect(filter);
 filter.connect(analyser2);
 //set filter settings
 filter.type = 'lowpass';
-filter.frequency.value = 200;
+filter.frequency.value = 230;
 filter.gain.value = 10;
 
 function getFile() {
@@ -56,7 +56,7 @@ function playSong() {
     let fileFound = getFile();
     // Only disable the play button if a file is found
     if (fileFound){
-        play.setAttribute('disabled', 'disabled');
+        play.setAttribute('disabled');
     }
 }
 

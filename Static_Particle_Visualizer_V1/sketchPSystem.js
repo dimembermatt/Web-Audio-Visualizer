@@ -39,7 +39,7 @@ function draw() {
     noFill();
     beginShape();
     stroke(random(0, 255), random(0, 255), random(0, 255));
-    strokeWeight(2.5);
+    strokeWeight(waveWeight);
     if (!beatFound) {
       for (let i = 0; i < waves.length; i++) {
         var x = map(i, 0, waves.length, 0, width);
