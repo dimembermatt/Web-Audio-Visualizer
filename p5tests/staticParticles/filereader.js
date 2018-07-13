@@ -54,13 +54,11 @@ function getFile() {
 
 function playSong() {
     let fileFound = getFile();
-
     // Only disable the play button if a file is found
     if (fileFound){
         play.setAttribute('disabled', 'disabled');
     }
 }
-
 
 function stopSong() {
     src.stop(0);

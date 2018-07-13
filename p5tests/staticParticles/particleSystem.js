@@ -1,13 +1,13 @@
 /**
  * function create2dArray establishes a new array organized based on input
- * @param columns: number of columns
  * @param rows: number of rows
+ * @param columns: number of columns
  * @return reference to the created array
  */
-function create2dArray(columns, rows) {
-  var arr = new Array(columns);
+function create2dArray(rows, columns) {
+  var arr = new Array(rows);
   for (let i = 0; i < arr.length; i++) {
-    arr[i] = new Array(rows);
+    arr[i] = new Array(columns);
   }
   return arr;
 }
@@ -27,29 +27,41 @@ class Particle {
    */
   constructor(basePSize) {
     this.size = basePSize;
-    this.color = [random(0, 255), random(0, 255), random(0, 255)];
     this.alpha = 255;
+    this.color = [random(0, 255), random(0, 255), random(0, 255), this.alpha];
+
   }
 }
 
 class ParticleSystem {
   /**
    * class function constructor creates a 2d array of particles
-   * @param columns: # of columns of the particleSystem
    * @param rows: # of rows of the particleSystem
+   * @param columns: # of columns of the particleSystem
    * @param basePSize: initial size of particles and minimum size
    * @param decayRate: how fast particles shrink over time
    * the color of each particle in the system is set at random on initialization.
    */
-  constructor(columns, rows, basePSize, decayRate) {
-    this.columns = columns;
+  constructor(rows, columns, basePSize, decayRate, setting) {
     this.rows = rows;
+    this.columns = columns;
     this.decayRate = decayRate;
     this.basePSize = basePSize;
-    this.pSystem = create2dArray(columns, rows);
-    for (let i = 0; i < columns; i++) {
-      for (let j = 0; j < rows; j++) {
-        this.pSystem[i][j] = new Particle(basePSize);
+    this.setting = setting;
+    this.pSystem = create2dArray(rows, columns);
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < columns; j++) {
+
+        //setting defined on creation
+        if (this.setting === 1) {
+          this.pSystem[i][j] = new Particle(basePSize);
+        } else if (this.setting === 2) {
+          if (random(0, 1) > .5)
+            this.pSystem[i][j] = new Particle(basePSize);
+          else
+            this.pSystem[i][j] = new Particle(10);
+        } else;
+
       }
     }
   }
@@ -61,8 +73,8 @@ class ParticleSystem {
    * @param sectionHeight: height of each row of the particleSystem on the canvas
    */
   display(sectionWidth, sectionHeight) {
-    for (let i = 0; i < this.columns; i++) {
-      for (let j = 0; j < this.rows; j++) {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.columns; j++) {
         noStroke();
         let particle = this.pSystem[i][j];
         fill(particle.color[0], particle.color[1], particle.color[2], particle.alpha);
@@ -76,78 +88,56 @@ class ParticleSystem {
    * average of the surrounding neighbor particles in the system.
    */
   update() {
-    for (let i = 0; i < this.columns; i++) {
-      for (let j = 0; j < this.rows; j++) {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.columns; j++) {
         let sum = 0;
         let count = 1;
-        //take the average of the surrounding 4 cells to calculate new size
-        //check left and right cells first, if they exist
-          // if (i == 0) {//if leftmost column
-          //   sum += this.pSystem[i + 1][j].size;
-          // } else if (i == this.columns-1) {//if rightmost column
-          //   sum += this.pSystem[i - 1][j].size;
-          // } else {//if neither of the above
-          //   sum += this.pSystem[i + 1][j].size;
-          //   sum += this.pSystem[i - 1][j].size;
-          //   count ++;
-          // }
-          //
-          // //check up and down cells next, if they exist
-          // if (j == 0) { //if topmost row
-          //   sum += this.pSystem[i][j + 1].size;
-          // } else if (j == this.rows-1) { //if bottom most row
-          //   sum += this.pSystem[i][j - 1].size;
-          // } else {//if neither of the above
-          //   sum += this.pSystem[i][j + 1].size;
-          //   sum += this.pSystem[i][j - 1].size;
-          //   count ++;
-          // }
-        if ((0 < i && i < this.columns - 1) && (0 < j && j < this.rows - 1)) {
+        if ((0 < i && i < this.rows - 1) && (0 < j && j < this.columns - 1)) {
           sum += this.pSystem[i - 1][j - 1].size;   //top left
-          sum += this.pSystem[i - 1][j + 1].size;   //bottom left
-          sum += this.pSystem[i + 1][j - 1].size;   //top right
+          sum += this.pSystem[i - 1][j + 1].size;   //top right
+          sum += this.pSystem[i + 1][j - 1].size;   //bottom left
           sum += this.pSystem[i + 1][j + 1].size;   //bottom right
-          sum += this.pSystem[i][j + 1].size;       //down
-          sum += this.pSystem[i][j - 1].size;       //up
-          sum += this.pSystem[i + 1][j].size;       //right
-          sum += this.pSystem[i - 1][j].size;       //left
+          sum += this.pSystem[i][j + 1].size;       //right
+          sum += this.pSystem[i][j - 1].size;       //left
+          sum += this.pSystem[i + 1][j].size;       //down
+          sum += this.pSystem[i - 1][j].size;       //up
           count += 8;
         } else if (i === 0) {
           if (j === 0) { //top left corner
-            sum += this.pSystem[i][j + 1].size;     //down
-            sum += this.pSystem[i + 1][j].size;     //right
+            sum += this.pSystem[i][j + 1].size;     //right
+            sum += this.pSystem[i + 1][j].size;     //down
             sum += this.pSystem[i + 1][j + 1].size; //bottom right
             count += 3;
-          } else if (j === this.rows - 1) {//bottom left corner
-            sum += this.pSystem[i][j - 1].size;     //up
-            sum += this.pSystem[i + 1][j].size;     //right
-            sum += this.pSystem[i + 1][j - 1].size; //top right
+          } else if (j === this.columns - 1) {//top right corner
+            sum += this.pSystem[i][j - 1].size;     //left
+            sum += this.pSystem[i + 1][j].size;     //down
+            sum += this.pSystem[i + 1][j - 1].size; //bottom left
             count += 3;
-          } else {//leftmost column
-            sum += this.pSystem[i][j + 1].size;     //down
-            sum += this.pSystem[i][j - 1].size;     //up
-            sum += this.pSystem[i + 1][j].size;     //right
-            sum += this.pSystem[i + 1][j - 1].size; //top right
+          } else {//top row
+            sum += this.pSystem[i][j + 1].size;     //right
+            sum += this.pSystem[i][j - 1].size;     //left
+            sum += this.pSystem[i + 1][j].size;     //down
+            sum += this.pSystem[i + 1][j - 1].size; //bottom left
             sum += this.pSystem[i + 1][j + 1].size; //bottom right
             count += 5;
           }
         } else {
-          if (j === 0) { //top right corner
-            sum += this.pSystem[i][j + 1].size;     //down
-            sum += this.pSystem[i - 1][j].size;     //left
-            sum += this.pSystem[i - 1][j + 1].size; //bottom left
+          if (j === 0) { //bottom left corner
+            sum += this.pSystem[i][j + 1].size;     //right
+            sum += this.pSystem[i - 1][j].size;     //up
+            sum += this.pSystem[i - 1][j + 1].size; //top right
             count += 3;
-          } else if (j === this.rows - 1) { //bottom right corner
-            sum += this.pSystem[i][j - 1].size;     //up
-            sum += this.pSystem[i - 1][j].size;     //left
+          } else if (j === this.columns - 1) { //bottom right corner
+            sum += this.pSystem[i][j - 1].size;     //left
+            sum += this.pSystem[i - 1][j].size;     //up
             sum += this.pSystem[i - 1][j - 1].size; //top left
             count += 3;
-          } else { //rightmost column
-            sum += this.pSystem[i][j + 1].size;     //down
-            sum += this.pSystem[i][j - 1].size;     //up
-            sum += this.pSystem[i - 1][j].size;     //left
+          } else { //bottom row
+            sum += this.pSystem[i][j + 1].size;     //right
+            sum += this.pSystem[i][j - 1].size;     //left
+            sum += this.pSystem[i - 1][j].size;     //up
             sum += this.pSystem[i - 1][j - 1].size; //top left
-            sum += this.pSystem[i - 1][j + 1].size; //bottom left
+            sum += this.pSystem[i - 1][j + 1].size; //top right
             count += 5;
           }
         }
@@ -156,6 +146,102 @@ class ParticleSystem {
         sum += this.pSystem[i][j].size;
         let weightedAvg = sum/count;
         this.pSystem[i][j].size = weightedAvg * this.decayRate <= this.basePSize ? this.basePSize : weightedAvg * this.decayRate;
+        //visual options
+        if (this.pSystem[i][j].size === this.basePSize) {
+          if (fizzBool) {
+            this.pSystem[i][j].size = this.basePSize * random(.8, 12);
+          } else if (discoBool) {
+            this.pSystem[i][j].size = random(4, 10);
+          } else;
+        }
+      }
+    }
+  }
+  //Conway's Game of Life - cells live or die based on state of neighbor cells
+  updateCellularAutomata1() {
+    for (let i = 0; i < this.rows; i++) {
+      for (let j = 0; j < this.columns; j++) {
+        let on = 10;
+        let count = 0;
+        if ((0 < i && i < this.rows - 1) && (0 < j && j < this.columns - 1)) {
+          if (this.pSystem[i - 1][j - 1].size >= on)   //top left
+            count++;
+          if (this.pSystem[i - 1][j + 1].size >= on)   //top right
+            count++;
+          if (this.pSystem[i + 1][j - 1].size >= on)   //bottom left
+            count++;
+          if (this.pSystem[i + 1][j + 1].size >= on)   //bottom right
+            count++;
+          if (this.pSystem[i][j + 1].size >= on)       //right
+            count++;
+          if (this.pSystem[i][j - 1].size >= on)       //left
+            count++;
+          if (this.pSystem[i + 1][j].size >= on)       //down
+            count++;
+          if (this.pSystem[i - 1][j].size >= on)       //up
+            count++;
+        } else if (i === 0) {
+          if (j === 0) { //top left corner
+            if (this.pSystem[i][j + 1].size >= on)     //right
+              count++;
+            if (this.pSystem[i + 1][j].size >= on)     //down
+              count++;
+            if (this.pSystem[i + 1][j + 1].size >= on) //bottom right
+              count++;
+          } else if (j === this.columns - 1) {//top right corner
+            if (this.pSystem[i][j - 1].size >= on)     //left
+              count++;
+            if (this.pSystem[i + 1][j].size >= on)     //down
+              count++;
+            if (this.pSystem[i + 1][j - 1].size >= on) //bottom left
+              count++;
+          } else {//top row
+            if (this.pSystem[i][j + 1].size >= on)     //right
+              count++;
+            if (this.pSystem[i][j - 1].size >= on)     //left
+              count++;
+            if (this.pSystem[i + 1][j].size >= on)     //down
+              count++;
+            if (this.pSystem[i + 1][j - 1].size >= on) //bottom left
+              count++;
+            if (this.pSystem[i + 1][j + 1].size >= on) //bottom right
+              count++;
+          }
+        } else {
+          if (j === 0) { //bottom left corner
+            if (this.pSystem[i][j + 1].size >= on)     //right
+              count++;
+            if (this.pSystem[i - 1][j].size >= on)     //up
+              count++;
+            if (this.pSystem[i - 1][j + 1].size >= on) //top right
+              count++;
+          } else if (j === this.columns - 1) { //bottom right corner
+            if (this.pSystem[i][j - 1].size >= on)     //left
+              count++;
+            if (this.pSystem[i - 1][j].size >= on)     //up
+              count++;
+            if (this.pSystem[i - 1][j - 1].size >= on) //top left
+              count++;
+          } else { //bottom row
+            if (this.pSystem[i][j + 1].size >= on)     //right
+              count++;
+            if (this.pSystem[i][j - 1].size >= on)     //left
+              count++;
+            if (this.pSystem[i - 1][j].size >= on)     //up
+              count++;
+            if (this.pSystem[i - 1][j - 1].size >= on) //top left
+              count++;
+            if (this.pSystem[i - 1][j + 1].size >= on) //top right
+              count++;
+          }
+        }
+        if (count >= 3 && count < 5) {
+          if (this.pSystem[i][j].size > 10)
+            this.pSystem[i][j].size = this.pSystem[i][j].size * this.decayRate;
+          else
+            this.pSystem[i][j].size = 10;
+        } else
+          this.pSystem[i][j].size = this.basePSize;
       }
     }
   }
