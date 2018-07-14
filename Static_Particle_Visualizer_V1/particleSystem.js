@@ -1,4 +1,10 @@
 /**
+ * particleSystem.js
+ * Matthew Yu
+ * Web-Audio-Visualizer Project (2018)
+ * Visualizer source code that enables visualization for the Static_Particle_Visualizer.
+ */
+/**
  * function create2dArray establishes a new array organized based on input
  * @param rows: number of rows
  * @param columns: number of columns
@@ -29,7 +35,6 @@ class Particle {
     this.size = basePSize;
     this.alpha = 255;
     this.color = [random(0, 255), random(0, 255), random(0, 255), this.alpha];
-
   }
 }
 
@@ -51,7 +56,6 @@ class ParticleSystem {
     this.pSystem = create2dArray(rows, columns);
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < columns; j++) {
-
         //setting defined on creation
         if (this.setting === 1) {
           this.pSystem[i][j] = new Particle(basePSize);
@@ -61,7 +65,6 @@ class ParticleSystem {
           else
             this.pSystem[i][j] = new Particle(10);
         } else;
-
       }
     }
   }

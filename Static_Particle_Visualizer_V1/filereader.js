@@ -1,3 +1,10 @@
+/**
+ * filereader.js
+ * Gauraang Dhamankar
+ * Web-Audio-Visualizer Project (2018)
+ * File MP3 load system for Static Particle Visualizer
+ */
+
 let context = new (window.AudioContext || window.webkitAudioContext)();
 let play = document.getElementById('play');
 let stop = document.getElementById('stop');
