@@ -1,35 +1,29 @@
 // Spectrograph setup
 const spectrum = new Uint8Array(analyser.frequencyBinCount);
-// Point class
-class Point {
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
-	}
-}
 function setup() {
 	createCanvas(spectrum.length, 480);
 }
 
 function draw() {
 	background(0);
-	if(loaded || spectrum) {
+	if(loaded && spectrum) {
 		analyser.getByteFrequencyData(spectrum);
-		strokeWeight(4);
-		stroke(255, 255, 255);
-		let prevPoint;
 		let i = 0;
-		let xoff = 0;
-		while(i < spectrum.length && xoff <= width) {
+		while(i < spectrum.length) {
 			let freq = spectrum[i];
-			point(xoff, freq);
-			if(prevPoint) {
-				line(prevPoint.x, prevPoint.y, xoff, freq);
-			}
-			prevPoint = new Point(xoff, freq);
-			xoff += 10;
-			i++;
+			let percent = freq/300;
+			let width = windowWidth/spectrum.length;
+			let height = windowHeight/4 * percent;
+			let offset = windowHeight/2 - height - 1;
+			let hue = (i+255)/spectrum.length * 500;
+			if(i < spectrum.length/3)
+				fill(hue, 0, 0);
+			else if(i < spectrum.length * 2/3) 
+				fill(0, hue, 0);
+			else 
+				fill(0, 0, hue);
+			rect(i/2 * width, offset, width, height);
+			i+=3;
 		}
-		console.log(spectrum);
 	}
 }
