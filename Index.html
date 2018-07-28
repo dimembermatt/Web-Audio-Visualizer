@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<!-- LANDING PAGE-->
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--header-->
+<head>
+  <title>Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <!--particleSystem p5js-->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/p5.js"></script>
+
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.dom.js"></script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.1/addons/p5.sound.js"></script>
+
+  <script type="text/javascript" src="workingParticleSystem/Particle.js"></script>
+  <script type="text/javascript" src="workingParticleSystem/QuadTree2.js"></script>
+  <script type="text/javascript" src="workingParticleSystem/sketch.js"></script>
+</head>
+
+<body style="background-color:rgb(242, 242, 166);">
+  <!---->
+  <div id="main_block">
+    <div id="title">
+      <h3>Hello World!</h3>
+      <h2>Web Audio Visualizer</h2>
+      <h4>Ryan Menghani, Matthew Yu, Gauraang Dhamankar</h4>
+    </div>
+    <div id="button_1">
+      <div class="background">
+        <a href="Static_Particle_Visualizer_V1/Static_Particle_Visualizer.html">Static Particles</a>
+      </div>
+    </div>
+    <div id="button_2">
+      <div class="deactivated">
+        <a class="disabled" href="Static_Particle_Visualizer_V1/Static_Particle_Visualizer.html">Neural Net</a>
+      </div>
+    </div>
+    <div id="button_3">
+      <div class="deactivated">
+        <a class="disabled" href="Static_Particle_Visualizer_V1/Static_Particle_Visualizer.html">Raindrops</a>
+      </div>
+    </div>
+    <!--starfield-->
+    <div id='universe'></div>
+  </div>
+</body>
